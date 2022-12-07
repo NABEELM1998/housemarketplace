@@ -5,8 +5,9 @@ from "firebase/firestore";
 import { db } from "../firebase.config";
 import {toast} from 'react-toastify'
 import Listingitem from "../components/ListingItem";
-const Offers = () =>{
+const Category = () =>{
     const [listings,SetListings] = useState(null)
+    const {categoryName} = useParams();
     const fetchListings = async() => {
        
         try{
@@ -15,7 +16,7 @@ const Offers = () =>{
             //create a Query
             const q = query(
                 listingsRef,
-                where('offer','==',true),
+                where('type','==',categoryName),
                 orderBy('timestamp','desc'),
                 limit(10)
                 
@@ -35,7 +36,6 @@ const Offers = () =>{
         }
         catch(error){
             toast.error("Could not fetch listings")
-            console.log(error)
         }
     }
     useEffect(()=>{
@@ -45,20 +45,22 @@ const Offers = () =>{
     return (
         <div className="category">
             <header>
-                <p>Offers</p>
+                <p className="pageHeader">
+                    {categoryName === 'rent'?'Places for rent':'places for sale'}
+                </p>
             </header>
             {listings && listings.length >0 ? <>
                 <main>
                     <ul className="categoryListings">
                         {listings.map((listing)=>{
-                            return <Listingitem listing={listing.data} id = {listing.id} key={listing.id}/>
+                            return <Listingitem listing={listing.data} id = {listing.id}/>
                         })}
                     </ul>
                 </main>
             
             
-            </>:`No offers at the moment`}
+            </>:`No places listed for ${categoryName}`}
         </div>
     )
 }
-export default Offers;
+export default Category;

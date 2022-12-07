@@ -1,13 +1,8 @@
 import { useState } from "react";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {ReactComponent as ArrowRightIcon} from '../assets/svg/keyboardArrowRightIcon.svg';
 import visibilityIcon from '../assets/svg/visibilityIcon.svg';
-import {getAuth , signInWithEmailAndPassword} from 'firebase/auth';
-import {toast} from 'react-toastify'
-import Oauth from "../components/Oauth";
-
 const SignIn = () => {
-    const navigate = useNavigate()
     const [showPassword , setShowPassword] = useState(false);
     const [formData , setFormData] = useState({
         email : '',
@@ -20,27 +15,13 @@ const SignIn = () => {
             [e.target.id]:e.target.value}
         })
     }
-    
-    const onSubmit = async(e) =>{
-        e.preventDefault()
-        try {   
-            const auth = getAuth();
-            const userCredential = await signInWithEmailAndPassword(auth,email,password);
-            if (userCredential.user){
-                navigate('/')
-            }
-        }
-        catch(error){
-            toast.error('Bad user credentials')
-        }
-        
-    }
+    console.log(formData)
     return (
         <div className="page-container">
             <header>
                 <p>Welcome Back!</p>
             </header>
-            <form onSubmit={onSubmit}>
+            <form>
                 <input 
                     type='email'
                     placeholder="Email" 
@@ -75,7 +56,7 @@ const SignIn = () => {
                 </div>
             </form>
             {/* google OAuth */}
-            <Oauth/>
+
             <Link to ='/sign-up' className="registerLink">
                 Sign Up Instead
             </Link>
